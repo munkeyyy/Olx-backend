@@ -84,7 +84,7 @@ export const getSingleCategories = async (req, res) => {
   try {
     const categoryId = req.params.category_id;
 
-    const categoriesData = await CategoryModel.findOne({ _id: categoryId });
+    const categoriesData = await CategoryModel.findOne({_id:categoryId});
     if (categoriesData) {
       return res.status(200).json({
         data: categoriesData,

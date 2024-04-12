@@ -1,13 +1,14 @@
-// import express from "express"
-// import { addProduct, deleteProduct, getProducts, updateProduct } from "../controllers/product.controller"
-// // import auth from "../middleware/auth.middleware"
+import express from "express"
+import { addProduct, deleteProduct, getProducts, getSingleProduct, updateProduct } from "../controllers/product.controller"
+// import auth from "../middleware/auth.middleware"
 
-// const router= express.Router()
+const router= express.Router()
 
 
-// router.post("/add-product", addProduct)
-// router.get("/get-products", getProducts)
-// router.put("/update-product/:product_id", updateProduct)
-// router.delete("/delete-product/:product_id", deleteProduct)
+router.post("/add-product", addProduct)
+router.get("/get-products", getProducts)
+router.get("/get-products/:product_id", getSingleProduct)
+router.put("/update-product/:product_id", updateProduct)
+router.delete("/delete-product/:product_id", deleteProduct)
 
-// export default router
+export default router

@@ -5,6 +5,7 @@ import userModel from "../models/user.model";
 import multer from "multer";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import path from "path";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -181,7 +182,7 @@ export const deleteUser = async (req, res) => {
 
 export const signUp = (req, res) => {
   try {
-    const { name, email, password, contact } = req.body;
+    const { name, email, password, phone } = req.body;
     const existUser = UserModel.findOne({ email: email });
     if (existUser) {
       return res.status(400).json({
@@ -194,7 +195,7 @@ export const signUp = (req, res) => {
       name: name,
       email: email,
       password: hashedPassword,
-      contact: contact,
+      phone: phone,
     })
       .then((data) => {
         return res.status(200).json({

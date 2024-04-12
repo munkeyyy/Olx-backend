@@ -1,12 +1,12 @@
 
-// import express from "express"
-// import { addCategory, deleteCategory, getCategories, updateCategory } from "../controllers/subcategory.controller"
-// // import auth from "../middleware/auth.middleware"
-// const router= express.Router()
+import express from "express"
+import { addSubCategory, deleteSubCategory, getSubCategories, updateSubCategory } from "../controllers/subacategory.controller"
+// import auth from "../middleware/auth.middleware"
+const router= express.Router()
 
-// router.post("/add-sub-category",  addCategory)
-// router.get("/get-sub-categories", getCategories)
-// router.put("/update-sub-category/:category_id",  updateCategory)
-// router.delete("/delete-sub-category/:category_id",  deleteCategory)
+router.post("/add-sub-category",  addSubCategory)
+router.get("/get-sub-categories", getSubCategories)
+router.put("/update-sub-category/:sub_id",  updateSubCategory)
+router.delete("/delete-sub-category/:sub_id",  deleteSubCategory)
 
-// export default router
+export default router

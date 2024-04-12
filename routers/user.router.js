@@ -21,5 +21,5 @@ router.delete("/delete-user/:user_id", deleteUser);
 // Auth
 
 router.post("/sign-up", signUp);
-router.post('/login',signIn)
+router.post('/sign-in',signIn)
 export default router;
