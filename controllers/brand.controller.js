@@ -2,23 +2,20 @@ import BrandModel from "../models/brand.model";
 
 export const addBrand = (req, res) => {
   try {
-    dataWithImage(req, res, (err) => {
-      // console.log(req.file)
+    const { title, subcategory } = req.body;
 
-      const { title, subcategory } = req.body;
-
-      const brandData = new BrandModel({
-        title: title,
-        subcategory: subcategory,
-      });
-      brandData.save();
-      if (brandData) {
-        return res.status(201).json({
-          data: brandData,
-          message: "brand added successfully",
-        });
-      }
+    const brandData = new BrandModel({
+      title: title,
+      subcategory: subcategory,
     });
+    brandData.save();
+    if (brandData) {
+      return res.status(201).json({
+        data: brandData,
+        message: "brand added successfully",
+      });
+    }
+    
   } catch (error) {
     return res.status(500).json({
       message: error.message,

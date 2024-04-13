@@ -26,7 +26,17 @@ export const addSubCategory = (req, res) => {
 
 export const getSubCategories = async (req, res) => {
   try {
-    const subData = await SubCategorySchema.find();
+    const subData = await SubCategorySchema.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      {$unwind:"$category"}
+    ]);
     if (subData) {
       return res.status(200).json({
         data: subData,
@@ -46,7 +56,9 @@ export const getSingleSubCategory = async (req, res) => {
   try {
     const subId = req.params.sub_id;
 
-    const subData = await SubCategorySchema.findOne({ _id: subId });
+    const subData = await SubCategorySchema.findOne({ _id:subId }).populate(
+      "category"
+    );
     if (subData) {
       return res.status(200).json({
         data: subData,

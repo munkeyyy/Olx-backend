@@ -40,9 +40,9 @@ export const addProduct = (req, res) => {
       let imgArr = [];
       if (req.files) {
         if (req.files["thumbnail"]) {
-          thumb = req.file["thubnail"][0].filename;
+          thumb = req.files["thumbnail"][0].filename;
         }
-
+        console.log(thumb)
         if (req.files["images"]) {
           for (let i = 0; i < req.files["images"].length; i++) {
             const element = req.files["images"][i];
@@ -82,7 +82,37 @@ export const getProducts = async (req, res) => {
   const { search, limit, page, sort } = req.query;
   const skipno = limit * (page - 1);
   try {
-    const pipeLine = [];
+    const pipeLine = [
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      { $unwind: "$category" },
+      {
+        $lookup: {
+          from: "subcategories",
+          localField: "subcategory",
+          foreignField: "_id",
+          as: "subcategory",
+        },
+      },
+
+      { $unwind: "$subcategory" },
+
+      {
+        $lookup: {
+          from: "brands",
+          localField: "brand",
+          foreignField: "_id",
+          as: "brand",
+        },
+      },
+      { $unwind: "$brand" }
+    ];
     const rgx = (pattern) => {
       return new RegExp(`.*${pattern}.*`);
     };
@@ -109,44 +139,12 @@ export const getProducts = async (req, res) => {
       pipeLine.push({ $match: filter });
     }
 
-    pipeLine.push(
-      {
-        $lookup: {
-          from: "categories",
-          localField: "category",
-          foreignField: "_id",
-          as: "category",
-        },
-      },
-
-      { $unwind: "$category" },
-      {
-        $lookup: {
-          from: "subcategories",
-          localField: "subcategory",
-          foreignField: "_id",
-          as: "subcategory",
-        },
-      },
-
-      { $unwind: "$subcategory" },
-      { $sort: { _id: 1 } },
-
-      {
-        $lookup: {
-          from: "brands",
-          localField: "brand",
-          foreignField: "_id",
-          as: "brand",
-        },
-      },
-      { $unwind: "$brand" }
-    );
+  
     if (parseInt(limit) && parseInt(page)) {
       pipeLine.push({ $skip: skipno }, { $limit: parseInt(limit) });
     }
-    const productsData = await ProductModel.aggregate(pipeLine).exec();
-
+    const productsData = await ProductModel.find().populate("category").populate("brand");
+    console.log(productsData)
     const currentDate = new Date();
     productsData.forEach((product) => {
       const productDate = new Date(product.day);
@@ -161,6 +159,7 @@ export const getProducts = async (req, res) => {
           productDate.getDate();
       }
     });
+    console.log(productsData)
     if (productsData) {
       return res.status(200).json({
         data: productsData,
