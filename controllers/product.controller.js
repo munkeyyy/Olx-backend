@@ -143,7 +143,7 @@ export const getProducts = async (req, res) => {
     if (parseInt(limit) && parseInt(page)) {
       pipeLine.push({ $skip: skipno }, { $limit: parseInt(limit) });
     }
-    const productsData = await ProductModel.find().populate("category").populate("brand");
+    const productsData = await ProductModel.find(filter).populate("category").populate("brand").limit(limit).skip(skipno);
     console.log(productsData)
     const currentDate = new Date();
     productsData.forEach((product) => {
