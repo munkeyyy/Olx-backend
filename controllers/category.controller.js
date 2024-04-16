@@ -40,12 +40,47 @@ export const addCategory = (req, res) => {
       if (req.file) {
         img = req.file.filename;
       }
-      const { title, description } = req.body;
+      console.log("Request Body:", req.body); 
+      const { title, description, subcategory } = req.body;
+      console.log("Subcategory:", subcategory); 
       const categoryData = new CategoryModel({
         title: title,
         description: description,
         thumbnail: img,
+        subcategory:[]
       });
+      if (!Array.isArray(subcategory)) {
+        throw new Error("Subcategory field is not an array");
+      }
+      for (const subcat of subcategory) {
+        const { title: subcatTitle, brand  } = subcat;
+     
+
+        const subcategory = {
+          title: subcatTitle?subcatTitle:null,
+          brand: []||null
+        };
+
+        // Check if brand field exists and is an array
+ if(brand){
+  if (Array.isArray(brand)) {
+    for (const brandItem of brand) {
+      if (brandItem && typeof brandItem === 'object') { 
+        const { title: brandTitle} = brandItem;
+        subcategory.brand.push({ title: brandTitle?brandTitle:null });
+      } else {
+        console.error("Invalid brand data:", brandItem);
+      }
+    }
+  } else {
+    brand=null
+    console.error("Brand field is missing or not an array:", brand);
+  }
+ }
+  
+        categoryData.subcategory.push(subcategory);
+      }
+      console.log(categoryData.subcategory)
       categoryData.save();
       if (categoryData) {
         return res.status(201).json({

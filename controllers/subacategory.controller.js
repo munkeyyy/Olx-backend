@@ -35,7 +35,8 @@ export const getSubCategories = async (req, res) => {
           as: "category",
         },
       },
-      {$unwind:"$category"}
+      {$unwind:"$category"},
+      // {$group:{_id:"category"}}
     ]);
     if (subData) {
       return res.status(200).json({
