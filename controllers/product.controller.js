@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
     }
   },
   filename: function (req, file, cb) {
-    console.log(file);
+    // console.log(file);
     const orgname = file.originalname;
     const name = path.parse(orgname).name;
     const ext = path.parse(orgname).ext;
@@ -42,7 +42,7 @@ export const addProduct = (req, res) => {
         if (req.files["thumbnail"]) {
           thumb = req.files["thumbnail"][0].filename;
         }
-        console.log(thumb)
+        // console.log(thumb)
         if (req.files["images"]) {
           for (let i = 0; i < req.files["images"].length; i++) {
             const element = req.files["images"][i];
@@ -144,7 +144,7 @@ export const getProducts = async (req, res) => {
       pipeLine.push({ $skip: skipno }, { $limit: parseInt(limit) });
     }
     const productsData = await ProductModel.find(filter).populate("category").populate("brand").limit(limit).skip(skipno);
-    console.log(productsData)
+    // console.log(productsData)
     const currentDate = new Date();
     productsData.forEach((product) => {
       const productDate = new Date(product.day);
@@ -159,7 +159,7 @@ export const getProducts = async (req, res) => {
           productDate.getDate();
       }
     });
-    console.log(productsData)
+    // console.log(productsData)
     if (productsData) {
       return res.status(200).json({
         data: productsData,

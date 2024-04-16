@@ -41,9 +41,9 @@ export const addUser = (req, res) => {
       if (req.file) {
         img = req.file.filename;
       }
-      const { name, email, password, phone } = req.body;
+      const { user_name, email, password, phone } = req.body;
       const userData = new UserModel({
-        name: name,
+        user_name: user_name,
         email: email,
         password: password,
         phone: phone,
@@ -117,7 +117,7 @@ export const updateUser = async (req, res) => {
       const userId = req.params.user_id;
       const existData = await UserModel.find({ _id: userId });
 
-      const { name, email, password, phone } = req.body;
+      const { user_name, email, password, phone } = req.body;
       let image = existData.avatar;
 
       if (req.file) {
@@ -131,7 +131,7 @@ export const updateUser = async (req, res) => {
         { _id: userId },
         {
           $set: {
-            name: name,
+            user_name: user_name,
             email: email,
             password: password,
             phone: phone,
@@ -182,7 +182,7 @@ export const deleteUser = async (req, res) => {
 
 export const signUp = (req, res) => {
   try {
-    const { name, email, password, phone } = req.body;
+    const { user_name, email, password, phone } = req.body;
     const existUser = UserModel.findOne({ email: email });
     if (existUser) {
       return res.status(400).json({
@@ -192,7 +192,7 @@ export const signUp = (req, res) => {
 
     const hashedPassword = bcrypt.hashSync(password, 10);
     return UserModel.create({
-      name: name,
+      user_name: user_name,
       email: email,
       password: hashedPassword,
       phone: phone,
@@ -230,7 +230,7 @@ export const signIn = async (req, res) => {
         {
           id: existUser._id,
           email: existUser.email,
-          name: existUser.name,
+          user_name: existUser.user_name,
         },
         process.env.TOKEN_SECRET_KEY,
         { expiresIn: "1h" }
