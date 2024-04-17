@@ -180,18 +180,17 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-export const signUp = (req, res) => {
+export const signUp = async(req, res) => {
   try {
     const { user_name, email, password, phone } = req.body;
-    const existUser = UserModel.findOne({ email: email });
+    const existUser = await UserModel.findOne({ email: email });
     if (existUser) {
       return res.status(400).json({
         message: "User Already Exists!",
       });
     }
-
     const hashedPassword = bcrypt.hashSync(password, 10);
-    return UserModel.create({
+    return  UserModel.create({
       user_name: user_name,
       email: email,
       password: hashedPassword,
@@ -204,7 +203,7 @@ export const signUp = (req, res) => {
         });
       })
       .catch((err) => {
-        return res.status.json({
+        return res.status(400).json({
           message: err,
         });
       });
