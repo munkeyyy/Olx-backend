@@ -185,7 +185,7 @@ export const signUp = async(req, res) => {
     const { user_name, email, password, phone } = req.body;
     const existUser = await UserModel.findOne({ email: email });
     if (existUser) {
-      return res.status(400).json({
+      return res.status(200).json({
         message: "User Already Exists!",
       });
     }
@@ -225,26 +225,25 @@ export const signIn = async (req, res) => {
     }
     const checkPassword = bcrypt.compareSync(password, existUser.password);
     if (!checkPassword) {
+      return res.status(400).json({
+        message:"Invalid Credentials"
+      })}
       const token = jwt.sign(
         {
-          id: existUser._id,
+          _id: existUser._id,
           email: existUser.email,
           user_name: existUser.user_name,
         },
         process.env.TOKEN_SECRET_KEY,
         { expiresIn: "1h" }
       );
-      console.log(token)
+      // console.log(token)
       return res.status(200).json({
        data: existUser,
        token: token,
        message:"User Signed in Successfully!!"
       })
-    }else{
-      return res.status(400).json({
-        message:"Invalid Credentials"
-      })
-    }
+    
   } catch (error) {
     return res.status(500).json({
       message:error.message

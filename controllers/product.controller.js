@@ -34,7 +34,7 @@ export const addProduct = (req, res) => {
 
     dataWithImages(req, res, (err) => {
       if (err) return res.status(400).json({ message: err.message });
-      const { title, brand, category, description, price, location } = req.body;
+      const { title, category, description, price, location } = req.body;
 
       let thumb = null;
       let imgArr = [];
@@ -53,7 +53,7 @@ export const addProduct = (req, res) => {
 
       const productData = new ProductModel({
         title: title,
-        brand: brand,
+        // brand: brand,
         category: category,
         description: description,
         price: price,
@@ -92,26 +92,26 @@ export const getProducts = async (req, res) => {
         },
       },
       { $unwind: "$category" },
-      {
-        $lookup: {
-          from: "subcategories",
-          localField: "subcategory",
-          foreignField: "_id",
-          as: "subcategory",
-        },
-      },
+      // {
+      //   $lookup: {
+      //     from: "subcategories",
+      //     localField: "subcategory",
+      //     foreignField: "_id",
+      //     as: "subcategory",
+      //   },
+      // },
 
-      { $unwind: "$subcategory" },
+      // { $unwind: "$subcategory" },
 
-      {
-        $lookup: {
-          from: "brands",
-          localField: "brand",
-          foreignField: "_id",
-          as: "brand",
-        },
-      },
-      { $unwind: "$brand" }
+      // {
+      //   $lookup: {
+      //     from: "brands",
+      //     localField: "brand",
+      //     foreignField: "_id",
+      //     as: "brand",
+      //   },
+      // },
+      // { $unwind: "$brand" }
     ];
     const rgx = (pattern) => {
       return new RegExp(`.*${pattern}.*`);
@@ -131,9 +131,9 @@ export const getProducts = async (req, res) => {
         $or: [
           { title: { $regex: searchRgx, $options: "i" } },
           { description: { $regex: searchRgx, $options: "i" } },
-          { "brand.title": { $regex: searchRgx, $options: "i" } },
+          // { "brand.title": { $regex: searchRgx, $options: "i" } },
           { "category.title": { $regex: searchRgx, $options: "i" } },
-          { "subcategory.title": { $regex: searchRgx, $options: "i" } },
+          // { "subcategory.title": { $regex: searchRgx, $options: "i" } },
         ],
       };
       pipeLine.push({ $match: filter });
@@ -143,7 +143,7 @@ export const getProducts = async (req, res) => {
     if (parseInt(limit) && parseInt(page)) {
       pipeLine.push({ $skip: skipno }, { $limit: parseInt(limit) });
     }
-    const productsData = await ProductModel.find(filter).populate("category").populate("brand").limit(limit).skip(skipno);
+    const productsData = await ProductModel.find(filter).populate("category");
     // console.log(productsData)
     const currentDate = new Date();
     productsData.forEach((product) => {

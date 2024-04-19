@@ -7,11 +7,6 @@ const ProductSchema = new Schema({
     type: String,
     required: true,
   },
-  brand: {
-    type: Schema.Types.ObjectId,
-    ref: BrandModel,
-    default: null,
-  },
   category: {
     type: Schema.Types.ObjectId,
     ref: CategoryModel,
