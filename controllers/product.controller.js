@@ -34,7 +34,15 @@ export const addProduct = (req, res) => {
 
     dataWithImages(req, res, (err) => {
       if (err) return res.status(400).json({ message: err.message });
-      const { title, category, description, price, location } = req.body;
+      const {
+        title,
+        category,
+        brand,
+        subcategory,
+        description,
+        price,
+        location,
+      } = req.body;
 
       let thumb = null;
       let imgArr = [];
@@ -53,8 +61,9 @@ export const addProduct = (req, res) => {
 
       const productData = new ProductModel({
         title: title,
-        // brand: brand,
+        brand: brand,
         category: category,
+        subcategory: subcategory,
         description: description,
         price: price,
         location: location,
@@ -131,19 +140,24 @@ export const getProducts = async (req, res) => {
         $or: [
           { title: { $regex: searchRgx, $options: "i" } },
           { description: { $regex: searchRgx, $options: "i" } },
-          // { "brand.title": { $regex: searchRgx, $options: "i" } },
           { "category.title": { $regex: searchRgx, $options: "i" } },
+          { "category.subcategory": { $regex: searchRgx, $options: "i" } },
+          { "category.brand": { $regex: searchRgx, $options: "i" } },
           // { "subcategory.title": { $regex: searchRgx, $options: "i" } },
+          // { "brand.title": { $regex: searchRgx, $options: "i" } },
         ],
       };
       pipeLine.push({ $match: filter });
     }
 
-  
     if (parseInt(limit) && parseInt(page)) {
       pipeLine.push({ $skip: skipno }, { $limit: parseInt(limit) });
     }
-    const productsData = await ProductModel.find(filter).populate("category");
+    const productsData = await ProductModel.aggregate(pipeLine)
+    // find(filter)
+    //   .populate("category")
+    //   .populate("subcategory")
+    //   .populate("brand");
     // console.log(productsData)
     const currentDate = new Date();
     productsData.forEach((product) => {
@@ -178,10 +192,11 @@ export const getProducts = async (req, res) => {
 export const getSingleProduct = async (req, res) => {
   try {
     const productId = req.params.product_id;
-    const productdata = await ProductModel.findOne({ _id: productId })
-      .populate("category")
-      // .populate("brand")
-      // .populate("subcategory");
+    const productdata = await ProductModel.findOne({ _id: productId }).populate(
+      "category"
+    );
+    // .populate("brand")
+    // .populate("subcategory");
 
     if (productdata) {
       return res.status(200).json({

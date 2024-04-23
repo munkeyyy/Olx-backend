@@ -7,14 +7,19 @@ const ProductSchema = new Schema({
     type: String,
     required: true,
   },
+  brand: {
+    type: String,
+    required:true,
+    default:null
+  },
   category: {
     type: Schema.Types.ObjectId,
     ref: CategoryModel,
     default: null,
   },
   subcategory: {
-    type: Schema.Types.ObjectId,
-    ref: subcategoyModel,
+    type: String,
+    required:true,
     default: null,
   },
   description: {
@@ -24,6 +29,7 @@ const ProductSchema = new Schema({
   price: {
     type: Number,
     default: null,
+    required:true,
   },
   location: {
     type: String,
