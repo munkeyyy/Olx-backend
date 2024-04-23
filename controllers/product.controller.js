@@ -180,11 +180,12 @@ export const getSingleProduct = async (req, res) => {
     const productId = req.params.product_id;
     const productdata = await ProductModel.findOne({ _id: productId })
       .populate("category")
-      .populate("brand")
-      .populate("subcategory");
+      // .populate("brand")
+      // .populate("subcategory");
 
     if (productdata) {
       return res.status(200).json({
+        data: productdata,
         message: "product fetched successfully",
       });
     }

@@ -30,4 +30,5 @@ app.use(process.env.URL_PREFIX+"categories",categoryRouter);
 app.use(process.env.URL_PREFIX+"sub-categories",subCategoryRouter);
 app.use(process.env.URL_PREFIX+"brands",brandRouter);
 app.use(process.env.URL_PREFIX+"products",productRouter)
+// app.use(productRouter)
 

@@ -114,18 +114,23 @@ export const updateUser = async (req, res) => {
           message: err.message,
         });
       }
-      const userId = req.params.user_id;
-      const existData = await UserModel.find({ _id: userId });
+      console.log('mydata',req.file);
+      console.log('yourdata',req.body);
 
+      const userId = req.params.user_id;
+      const existData = await UserModel.findOne({ _id: userId });
+      console.log("data",existData.avatar)
       const { user_name, email, password, phone } = req.body;
       let image = existData.avatar;
-
+        console.log("EXIST", image)
       if (req.file) {
         image = req.file.filename;
         if (fs.existsSync("./uploads/users/" + existData.avatar)) {
           fs.unlinkSync("./uploads/users/" + existData.avatar);
         }
+        console.log("img",image)
       }
+      console.log(image)
 
       const updatedUser = await UserModel.updateOne(
         { _id: userId },
@@ -139,7 +144,9 @@ export const updateUser = async (req, res) => {
           },
         }
       );
+      console.log("avatar",updatedUser)
       if (updatedUser.acknowledged) {
+        console.log(updatedUser.avatar)
         return res.status(200).json({
           data: updatedUser,
           message: "user updated successfully",
