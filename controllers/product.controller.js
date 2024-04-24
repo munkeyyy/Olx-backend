@@ -178,6 +178,7 @@ export const getProducts = async (req, res) => {
       return res.status(200).json({
         data: productsData,
         message: "Products Fetched successfully",
+        // filepath:"http://localhost:8001/uploads/product"
       });
     }
     return res.status(400).json({
