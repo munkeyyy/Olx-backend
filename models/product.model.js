@@ -1,8 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 import BrandModel from "./brand.model";
 import CategoryModel from "./category.model";
-import subcategoyModel from "./subcategoy.model";
+import UserModel from "./user.model"
 const ProductSchema = new Schema({
+  userId:{
+    type:Schema.Types.ObjectId,
+    ref:UserModel,
+    required:true,
+  },
   title: {
     type: String,
     required: true,

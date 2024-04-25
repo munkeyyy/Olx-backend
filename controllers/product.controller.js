@@ -42,6 +42,7 @@ export const addProduct = (req, res) => {
         description,
         price,
         location,
+        userId,
       } = req.body;
 
       let thumb = null;
@@ -69,6 +70,7 @@ export const addProduct = (req, res) => {
         location: location,
         thumbnail: thumb,
         images: imgArr,
+        userId:userId
       });
 
       productData.day = new Date();
@@ -195,7 +197,7 @@ export const getSingleProduct = async (req, res) => {
     const productId = req.params.product_id;
     const productdata = await ProductModel.findOne({ _id: productId }).populate(
       "category"
-    );
+    ).populate("userId");
     // .populate("brand")
     // .populate("subcategory");
 
