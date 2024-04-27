@@ -68,7 +68,7 @@ export const addProduct = (req, res) => {
         description: description,
         price: price,
         location: location,
-        thumbnail: thumb,
+        thumbnail: imgArr[0],
         images: imgArr,
         userId:userId
       });
