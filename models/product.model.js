@@ -38,6 +38,7 @@ const ProductSchema = new Schema({
   },
   location: {
     type: String,
+    default:null,
     required: true,
   },
   day:{
