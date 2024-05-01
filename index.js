@@ -19,7 +19,7 @@ const port = 8001;
 
 async function connectToDatabase() {
   try {
-    await mongoose.connect("mongodb://127.0.0.1/OLX");
+    await mongoose.connect("mongodb+srv://monke_98:rohitkhatri98@olx.t1l116w.mongodb.net/OLX");
     console.log("DB Connected!");
   } catch (error) {
     console.error("Error connecting to database:", error);
