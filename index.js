@@ -18,7 +18,7 @@ app.use(cors())
 const port = 8001;
 
 mongoose
-  .connect("mongodb://localhost:27017/OLX")
+  .connect("mongodb://127.0.0.1/OLX")
   .then(() => console.log("DB Connected!"))
   .catch((err) => console.log(err));
 
