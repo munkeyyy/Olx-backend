@@ -245,6 +245,7 @@ export const signIn = async (req, res) => {
         { expiresIn: "1h" }
       );
       // console.log(token)
+      console.log(req.user)
       return res.status(200).json({
        data: existUser,
        token: token,

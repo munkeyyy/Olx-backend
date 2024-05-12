@@ -5,8 +5,10 @@ import userModel from "../models/user.model";
 
 export const sendMessage = async (req, res) => {
   try {
-    const { message, senderId } = req.body;
+    console.log(req.user)
+    const { message } = req.body;
     const recieverId = req.params.recId;
+    const senderId = req.user._id
     const conversation = await conversationModel.findOne({
       participants: { $all: [senderId, recieverId] },
     });
@@ -29,9 +31,8 @@ export const sendMessage = async (req, res) => {
     await Promise.all([conversation.save(), newMessage.save()]);
     if (newMessage) {
       const responseData = {
-        conversationId: conversation._id, // Include conversation ID in response
         newMessage,
-        message:"sent successfully"
+        
       };
 
       return res.status(201).json(responseData);
@@ -50,11 +51,11 @@ export const sendMessage = async (req, res) => {
 export const getMessages = async (req, res) => {
   try {
     const chatId = req.params.chatId;
-    const conversation = await conversationModel
-      .findOne({
-        _id: chatId,
-      })
-      .populate("messages");
+    const senderId = req.user._id;
+
+		const conversation = await conversationModel.findOne({
+			participants: { $all: [senderId,chatId] },
+		}).populate("messages");
     if (conversation) {
       return res.status(200).json(conversation.messages);
     }
