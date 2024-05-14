@@ -10,7 +10,8 @@ import brandRouter from "./routers/brand.router";
 import productRouter from "./routers/product.router";
 import favRouter from "./routers/favourite.router";
 import messageRouter from "./routers/message.router";
-const app = express();
+import { app, server } from "./socket/socket";
+// const app = express();
 app.use(express.json()); //body-parser (to read request body data)
 
 app.use("/uploads", express.static("uploads"));
@@ -35,7 +36,7 @@ async function connectToDatabase() {
 
 // Call the async function to connect to the database
 connectToDatabase();
-app.listen(port, () => {
+server.listen(port, () => {
   console.log("Server is running on port " + port);
 });
 
