@@ -170,7 +170,7 @@ export const deleteUser = async (req, res) => {
 
     const deletedUser = await UserModel.deleteOne({ _id: userId });
     if (deletedUser.acknowledged) {
-      if (fs.existsSync("./uplaods/users/" + existData.avatar)) {
+      if (fs.existsSync("./uploads/users/" + existData.avatar)) {
         fs.unlinkSync("./uploads/users/" + existData.avatar);
       }
       return res.status(200).json({

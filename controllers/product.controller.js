@@ -70,7 +70,7 @@ export const addProduct = (req, res) => {
         location: location,
         thumbnail: imgArr[0],
         images: imgArr,
-        userId:userId
+        userId: userId,
       });
 
       productData.day = new Date();
@@ -103,26 +103,6 @@ export const getProducts = async (req, res) => {
         },
       },
       { $unwind: "$category" },
-      // {
-      //   $lookup: {
-      //     from: "subcategories",
-      //     localField: "subcategory",
-      //     foreignField: "_id",
-      //     as: "subcategory",
-      //   },
-      // },
-
-      // { $unwind: "$subcategory" },
-
-      // {
-      //   $lookup: {
-      //     from: "brands",
-      //     localField: "brand",
-      //     foreignField: "_id",
-      //     as: "brand",
-      //   },
-      // },
-      // { $unwind: "$brand" }
     ];
     const rgx = (pattern) => {
       return new RegExp(`.*${pattern}.*`);
@@ -155,7 +135,7 @@ export const getProducts = async (req, res) => {
     if (parseInt(limit) && parseInt(page)) {
       pipeLine.push({ $skip: skipno }, { $limit: parseInt(limit) });
     }
-    const productsData = await ProductModel.aggregate(pipeLine)
+    const productsData = await ProductModel.aggregate(pipeLine);
     // find(filter)
     //   .populate("category")
     //   .populate("subcategory")
@@ -195,9 +175,9 @@ export const getProducts = async (req, res) => {
 export const getSingleProduct = async (req, res) => {
   try {
     const productId = req.params.product_id;
-    const productdata = await ProductModel.findOne({ _id: productId }).populate(
-      "category"
-    ).populate("userId");
+    const productdata = await ProductModel.findOne({ _id: productId })
+      .populate("category")
+      .populate("userId");
     // .populate("brand")
     // .populate("subcategory");
 
@@ -219,7 +199,7 @@ export const getSingleProduct = async (req, res) => {
 };
 export const updateProduct = async (req, res) => {
   try {
-    const { title, brand, category, description, price } = req.body;
+    const { title, brand, category, description, price, subcategory } =req.body;
     const productId = req.params.product_id;
     const updatedProduct = await ProductModel.updateOne(
       { _id: productId },
@@ -228,6 +208,7 @@ export const updateProduct = async (req, res) => {
           title: title,
           brand: brand,
           category: category,
+          subcategory: subcategory,
           description: description,
           price: price,
         },
@@ -250,8 +231,13 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     const productId = req.params.product_id;
+    const existData = await UserModel.find({ _id:productId  });
+
     const deletedProduct = await ProductModel.deleteOne({ _id: productId });
     if (deletedProduct.acknowledged) {
+      if (fs.existsSync("./uploads/products/" + existData.thumbnail)) {
+        fs.unlinkSync("./uploads/products/" + existData.thumbnail);
+      }
       return res.status(200).json({
         message: "Product deleted Succesfully",
       });
