@@ -231,7 +231,7 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     const productId = req.params.product_id;
-    const existData = await UserModel.find({ _id:productId  });
+    const existData = await ProductModel.find({ _id:productId  });
 
     const deletedProduct = await ProductModel.deleteOne({ _id: productId });
     if (deletedProduct.acknowledged) {
@@ -246,7 +246,7 @@ export const deleteProduct = async (req, res) => {
       message: "Something went wrong",
     });
   } catch (error) {
-    return res.status(500).josn({
+    return res.status(500).json({
       message: error.message,
     });
   }
