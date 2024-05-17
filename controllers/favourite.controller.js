@@ -70,7 +70,7 @@ export const removeFav = async (req, res) => {
     const deleteItem = await FavouriteModel.deleteOne({ _id: favId });
     if (deleteItem.acknowledged) {
       return res.status(200).json({
-        message: "Item deleted",
+        message: "Item deleted from favourites",
       });
     }
     return res.status(400).json({
